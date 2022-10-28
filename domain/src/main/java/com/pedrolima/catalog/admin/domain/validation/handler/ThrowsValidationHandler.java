@@ -1,0 +1,34 @@
+package com.pedrolima.catalog.admin.domain.validation.handler;
+
+import com.pedrolima.catalog.admin.domain.exceptions.DomainException;
+import com.pedrolima.catalog.admin.domain.validation.Error;
+import com.pedrolima.catalog.admin.domain.validation.ValidationHandler;
+import java.util.List;
+
+public class ThrowsValidationHandler implements ValidationHandler {
+
+  @Override
+  public ValidationHandler append(Error anError) {
+    throw DomainException.with(anError);
+  }
+
+  @Override
+  public ValidationHandler append(ValidationHandler aHandler) {
+    throw DomainException.with(aHandler.getErrors());
+  }
+
+  @Override
+  public ValidationHandler validate(Validation aValitadion) {
+    try {
+      aValitadion.validate();
+    } catch (final Exception ex) {
+      throw DomainException.with(List.of(new Error(ex.getMessage())));
+    }
+    return this;
+  }
+
+  @Override
+  public List<Error> getErrors() {
+    return List.of();
+  }
+}
