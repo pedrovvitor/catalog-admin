@@ -1,9 +1,9 @@
 package com.pedrolima.catalog.admin.domain.category;
 
 import com.pedrolima.catalog.admin.domain.AggregateRoot;
+import com.pedrolima.catalog.admin.domain.validation.ValidationHandler;
 
 import java.time.Instant;
-import java.util.UUID;
 
 public class Category extends AggregateRoot<CategoryId> {
     private final String name;
@@ -35,6 +35,11 @@ public class Category extends AggregateRoot<CategoryId> {
         final var id = CategoryId.unique();
         final var now = Instant.now();
         return new Category(id, aName, aDescription, isActive, now, now, null);
+    }
+
+    @Override
+    public void validate(final ValidationHandler handler) {
+        new CategoryValidator(this, handler).validate();
     }
 
     public CategoryId getId() {
