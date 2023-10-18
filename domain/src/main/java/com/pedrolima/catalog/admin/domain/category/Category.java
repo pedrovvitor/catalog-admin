@@ -5,7 +5,7 @@ import com.pedrolima.catalog.admin.domain.validation.ValidationHandler;
 
 import java.time.Instant;
 
-public class Category extends AggregateRoot<CategoryId> {
+public class Category extends AggregateRoot<CategoryID> {
     private String name;
     private String description;
     private boolean active;
@@ -14,7 +14,7 @@ public class Category extends AggregateRoot<CategoryId> {
     private Instant deletedAt;
 
     private Category(
-            final CategoryId anId,
+            final CategoryID anId,
             final String aName,
             final String aDescription,
             final boolean isActive,
@@ -32,7 +32,7 @@ public class Category extends AggregateRoot<CategoryId> {
     }
 
     public static Category newCategory(final String aName, final String aDescription, final boolean isActive) {
-        final var id = CategoryId.unique();
+        final var id = CategoryID.unique();
         final var now = Instant.now();
         final var deletedAt = isActive ? null : now;
         return new Category(id, aName, aDescription, isActive, now, now, deletedAt);
@@ -43,7 +43,7 @@ public class Category extends AggregateRoot<CategoryId> {
         new CategoryValidator(this, handler).validate();
     }
 
-    public CategoryId getId() {
+    public CategoryID getId() {
         return id;
     }
 

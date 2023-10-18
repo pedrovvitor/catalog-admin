@@ -5,24 +5,24 @@ import com.pedrolima.catalog.admin.domain.Identifier;
 import java.util.Objects;
 import java.util.UUID;
 
-public class CategoryId extends Identifier {
+public class CategoryID extends Identifier {
 
     private final String value;
 
-    private CategoryId(String value) {
+    private CategoryID(String value) {
         this.value = value;
     }
 
-    public static CategoryId unique() {
-        return CategoryId.from(UUID.randomUUID());
+    public static CategoryID unique() {
+        return CategoryID.from(UUID.randomUUID());
     }
 
-    public static CategoryId from(String anId) {
-        return new CategoryId(anId);
+    public static CategoryID from(String anId) {
+        return new CategoryID(anId);
     }
 
-    public static CategoryId from(UUID anId) {
-        return new CategoryId(anId.toString().toLowerCase());
+    public static CategoryID from(UUID anId) {
+        return new CategoryID(anId.toString().toLowerCase());
     }
 
     public String getValue() {
@@ -33,7 +33,7 @@ public class CategoryId extends Identifier {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        final CategoryId that = (CategoryId) o;
+        final CategoryID that = (CategoryID) o;
         return Objects.equals(getValue(), that.getValue());
     }
 
