@@ -1,8 +1,6 @@
 package com.pedrolima.catalog.admin.application;
 
-public class UseCase {
+public abstract class UseCase<IN, OUT> {
 
-    public String execute() {
-        return "Hello world";
-    }
+    public abstract OUT execute(IN anIn);
 }
