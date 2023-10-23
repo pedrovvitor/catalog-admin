@@ -8,6 +8,7 @@ import com.pedrolima.catalog.admin.domain.validation.Error;
 import com.pedrolima.catalog.admin.domain.validation.handler.Notification;
 import io.vavr.control.Either;
 
+import java.util.Objects;
 import java.util.function.Supplier;
 
 import static io.vavr.API.Left;
@@ -18,7 +19,7 @@ public class DefaultUpdateCategoryUseCase extends UpdateCategoryUseCase {
     private final CategoryGateway categoryGateway;
 
     public DefaultUpdateCategoryUseCase(CategoryGateway categoryGateway) {
-        this.categoryGateway = categoryGateway;
+        this.categoryGateway = Objects.requireNonNull(categoryGateway);
     }
 
     @Override
