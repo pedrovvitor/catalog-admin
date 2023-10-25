@@ -1,11 +1,14 @@
 package com.pedrolima.catalog.admin.infrastructure;
 
+import com.pedrolima.catalog.admin.infrastructure.configuration.WebServerConfig;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.core.env.AbstractEnvironment;
 
 @SpringBootApplication
 public class Main {
     public static void main(String[] args) {
-        SpringApplication.run(WebServerConfig.class);
+        System.setProperty(AbstractEnvironment.DEFAULT_PROFILES_PROPERTY_NAME, "development");
+        SpringApplication.run(WebServerConfig.class, args);
     }
 }

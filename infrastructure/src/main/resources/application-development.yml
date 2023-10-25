@@ -1,0 +1,7 @@
+# First file that spring will read
+server:
+  port: 8081
+  undertow:
+    threads:
+      worker: 10
+      io: 2
