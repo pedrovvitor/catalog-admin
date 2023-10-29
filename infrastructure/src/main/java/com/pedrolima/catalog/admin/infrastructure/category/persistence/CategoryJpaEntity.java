@@ -2,11 +2,11 @@ package com.pedrolima.catalog.admin.infrastructure.category.persistence;
 
 import com.pedrolima.catalog.admin.domain.category.Category;
 import com.pedrolima.catalog.admin.domain.category.CategoryID;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
-
 import java.time.Instant;
 
 @Entity

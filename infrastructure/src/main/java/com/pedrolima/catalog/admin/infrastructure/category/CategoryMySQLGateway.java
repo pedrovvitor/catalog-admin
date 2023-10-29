@@ -5,6 +5,7 @@ import com.pedrolima.catalog.admin.domain.category.CategoryGateway;
 import com.pedrolima.catalog.admin.domain.category.CategoryID;
 import com.pedrolima.catalog.admin.domain.category.CategorySearchQuery;
 import com.pedrolima.catalog.admin.domain.pagination.Pagination;
+import com.pedrolima.catalog.admin.infrastructure.category.persistence.CategoryJpaEntity;
 import com.pedrolima.catalog.admin.infrastructure.category.persistence.CategoryRepository;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +22,7 @@ public class CategoryMySQLGateway implements CategoryGateway {
 
     @Override
     public Category create(final Category aCategory) {
-        return null;
+        return repository.save(CategoryJpaEntity.from(aCategory)).toAggregate();
     }
 
     @Override
