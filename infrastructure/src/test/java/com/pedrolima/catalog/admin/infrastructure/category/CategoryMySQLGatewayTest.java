@@ -71,6 +71,7 @@ public class CategoryMySQLGatewayTest {
 
         final var actualCategory = categoryGateway.update(aUpdatedCategory);
 
+        Assertions.assertEquals(aCategory.getId(), actualCategory.getId());
         Assertions.assertEquals(expectedName, actualCategory.getName());
         Assertions.assertEquals(expectedDescription, actualCategory.getDescription());
         Assertions.assertEquals(isActive, actualCategory.isActive());
@@ -112,5 +113,40 @@ public class CategoryMySQLGatewayTest {
         categoryGateway.deleteById(CategoryID.from("invalid"));
 
         Assertions.assertEquals(0, categoryRepository.count());
+    }
+
+    @Test
+    public void givenAPrePersistedCategoryAndValidCategoryId_whenCallFindById_shouldReturnCategory() {
+        final var expectedName = "Movies";
+        final var expectedDescription = "The most watched Category";
+        final var isActive = true;
+
+        final var aCategory = Category.newCategory(expectedName, expectedDescription, isActive);
+
+        Assertions.assertEquals(0, categoryRepository.count());
+
+        categoryRepository.saveAndFlush(CategoryJpaEntity.from(aCategory));
+
+        Assertions.assertEquals(1, categoryRepository.count());
+
+        final var actualCategory = categoryGateway.findById(aCategory.getId()).get();
+
+        Assertions.assertEquals(aCategory.getId(), actualCategory.getId());
+        Assertions.assertEquals(expectedName, actualCategory.getName());
+        Assertions.assertEquals(expectedDescription, actualCategory.getDescription());
+        Assertions.assertEquals(isActive, actualCategory.isActive());
+        Assertions.assertEquals(aCategory.getCreatedAt(), actualCategory.getCreatedAt());
+        Assertions.assertEquals(actualCategory.getUpdatedAt(), aCategory.getUpdatedAt());
+        Assertions.assertEquals(aCategory.getDeletedAt(), actualCategory.getDeletedAt());
+        Assertions.assertNull(actualCategory.getDeletedAt());
+    }
+
+    @Test
+    public void givenAPrePersistedCategoryNotStored_whenCallFindById_shouldReturnEmpty() {
+        Assertions.assertEquals(0, categoryRepository.count());
+
+        final var categoryOp = categoryRepository.findById(CategoryID.unique().getValue());
+
+        Assertions.assertTrue(categoryOp.isEmpty());
     }
 }
