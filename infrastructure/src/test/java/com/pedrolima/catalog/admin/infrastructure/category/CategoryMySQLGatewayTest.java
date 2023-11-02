@@ -1,9 +1,9 @@
 package com.pedrolima.catalog.admin.infrastructure.category;
 
+import com.pedrolima.catalog.admin.MySQLGatewayTest;
 import com.pedrolima.catalog.admin.domain.category.Category;
 import com.pedrolima.catalog.admin.domain.category.CategoryID;
 import com.pedrolima.catalog.admin.domain.category.CategorySearchQuery;
-import com.pedrolima.catalog.admin.infrastructure.MySQLGatewayTest;
 import com.pedrolima.catalog.admin.infrastructure.category.persistence.CategoryJpaEntity;
 import com.pedrolima.catalog.admin.infrastructure.category.persistence.CategoryRepository;
 import org.junit.jupiter.api.Assertions;

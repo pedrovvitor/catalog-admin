@@ -84,7 +84,7 @@ public class CreateCategoryUseCaseTest {
     public void givenAValidNameWithInactiveCategory_whenCallsCreateCategory_shouldReturnInactiveCategoryId() {
         final var expectedName = "Movies";
         final var expectedDescription = "The most watched category";
-        final var expectedIsActive = true;
+        final var expectedIsActive = false;
 
         final var aCommand = CreateCategoryCommand.with(expectedName, expectedDescription, expectedIsActive);
 
@@ -103,7 +103,7 @@ public class CreateCategoryUseCaseTest {
                                         && Objects.nonNull(aCategory.getId())
                                         && Objects.nonNull(aCategory.getCreatedAt())
                                         && Objects.nonNull(aCategory.getUpdatedAt())
-                                        && Objects.isNull(aCategory.getDeletedAt())
+                                        && Objects.nonNull(aCategory.getDeletedAt())
 
                         )
                 );
@@ -136,7 +136,6 @@ public class CreateCategoryUseCaseTest {
                                         && Objects.nonNull(aCategory.getCreatedAt())
                                         && Objects.nonNull(aCategory.getUpdatedAt())
                                         && Objects.isNull(aCategory.getDeletedAt())
-
                         )
                 );
     }

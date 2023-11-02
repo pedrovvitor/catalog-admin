@@ -1,7 +1,7 @@
 package com.pedrolima.catalog.admin.infrastructure.category.persistence;
 
+import com.pedrolima.catalog.admin.MySQLGatewayTest;
 import com.pedrolima.catalog.admin.domain.category.Category;
-import com.pedrolima.catalog.admin.infrastructure.MySQLGatewayTest;
 import org.hibernate.PropertyValueException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
