@@ -1,9 +1,11 @@
 package com.pedrolima.catalog.admin.domain.category;
 
 import com.pedrolima.catalog.admin.domain.AggregateRoot;
+import com.pedrolima.catalog.admin.domain.utils.InstantUtils;
 import com.pedrolima.catalog.admin.domain.validation.ValidationHandler;
 
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Objects;
 
 public class Category extends AggregateRoot<CategoryID> implements Cloneable {
@@ -34,7 +36,7 @@ public class Category extends AggregateRoot<CategoryID> implements Cloneable {
 
     public static Category newCategory(final String aName, final String aDescription, final boolean isActive) {
         final var id = CategoryID.unique();
-        final var now = Instant.now();
+        final var now = InstantUtils.nowWith(ChronoUnit.MICROS);
         final var deletedAt = isActive ? null : now;
         return new Category(id, aName, aDescription, isActive, now, now, deletedAt);
     }
@@ -109,17 +111,17 @@ public class Category extends AggregateRoot<CategoryID> implements Cloneable {
     public Category activate() {
         this.deletedAt = null;
         this.active = true;
-        this.updatedAt = Instant.now();
+        this.updatedAt = InstantUtils.nowWith(ChronoUnit.MICROS);
         return this;
     }
 
     public Category deactivate() {
         if (getDeletedAt() == null) {
-            this.deletedAt = Instant.now();
+            this.deletedAt = InstantUtils.nowWith(ChronoUnit.MICROS);
         }
 
         this.active = false;
-        this.updatedAt = Instant.now();
+        this.updatedAt = InstantUtils.nowWith(ChronoUnit.MICROS);
         return this;
     }
 
