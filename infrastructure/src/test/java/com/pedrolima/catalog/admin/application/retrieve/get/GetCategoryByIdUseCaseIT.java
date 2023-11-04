@@ -70,7 +70,7 @@ public class GetCategoryByIdUseCaseIT {
         final var expectedErrorMessage = "Gateway error";
         final var expectedId = CategoryID.from("123");
 
-        doThrow(new IllegalStateException()).when(categoryGateway).findById(expectedId);
+        doThrow(new IllegalStateException(expectedErrorMessage)).when(categoryGateway).findById(expectedId);
 
         final var actualException =
                 Assertions.assertThrows(IllegalStateException.class, () -> useCase.execute(expectedId.getValue()));

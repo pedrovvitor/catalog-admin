@@ -47,7 +47,6 @@ public class ListCategoriesUseCaseTest {
         final var aQuery =
                 new CategorySearchQuery(expectedPage, expectedPerPage, expectedTerms, expectedSort, expectedDirection);
 
-
         final var expectedPagination = new Pagination<>(expectedPage, expectedPerPage, categories.size(), categories);
 
         final var expectedItemsCount = 2;
@@ -76,7 +75,6 @@ public class ListCategoriesUseCaseTest {
 
         final var aQuery =
                 new CategorySearchQuery(expectedPage, expectedPerPage, expectedTerms, expectedSort, expectedDirection);
-
 
         final var expectedPagination = new Pagination<>(expectedPage, expectedPerPage, categories.size(), categories);
 
