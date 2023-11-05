@@ -31,7 +31,6 @@ public class CategoryRepositoryTest {
 
         Assertions.assertEquals(expectedPropertyName, actualCause.getPropertyName());
         Assertions.assertEquals(expectedMessage, actualCause.getMessage());
-
     }
 
     @Test
@@ -51,7 +50,6 @@ public class CategoryRepositoryTest {
 
         Assertions.assertEquals(expectedPropertyName, actualCause.getPropertyName());
         Assertions.assertEquals(expectedMessage, actualCause.getMessage());
-
     }
 
     @Test
@@ -71,6 +69,5 @@ public class CategoryRepositoryTest {
 
         Assertions.assertEquals(expectedPropertyName, actualCause.getPropertyName());
         Assertions.assertEquals(expectedMessage, actualCause.getMessage());
-
     }
 }
