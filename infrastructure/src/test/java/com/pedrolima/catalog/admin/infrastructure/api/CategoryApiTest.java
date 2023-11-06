@@ -17,10 +17,12 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.Objects;
 
+import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.times;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ControllerTest(controllers = CategoryAPI.class)
@@ -44,7 +46,7 @@ public class CategoryApiTest {
         final var aInput = new CreateCategoryApiInput(expectedName, expectedDescription, expectedIsActive);
 
         Mockito.when(createCategoryUseCase.execute(Mockito.any()))
-                .thenReturn(API.Right(CreateCategoryOutput.from(CategoryID.from("123"))));
+                .thenReturn(API.Right(CreateCategoryOutput.from(CategoryID.from("123").getValue())));
 
         final var request = MockMvcRequestBuilders.post("/categories")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -54,7 +56,9 @@ public class CategoryApiTest {
                 .andDo(print())
                 .andExpectAll(
                         status().isCreated(),
-                        header().string("Location", "/categories/123")
+                        header().string("Location", "/categories/123"),
+                        header().string("Content-type", MediaType.APPLICATION_JSON_VALUE),
+                        jsonPath("$.id", equalTo("123"))
                 );
 
         Mockito.verify(createCategoryUseCase, times(1)).execute(argThat(cmd ->
