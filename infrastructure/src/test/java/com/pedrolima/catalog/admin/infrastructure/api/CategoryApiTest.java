@@ -9,6 +9,7 @@ import com.pedrolima.catalog.admin.application.category.retrieve.get.GetCategory
 import com.pedrolima.catalog.admin.domain.category.Category;
 import com.pedrolima.catalog.admin.domain.category.CategoryID;
 import com.pedrolima.catalog.admin.domain.exceptions.DomainException;
+import com.pedrolima.catalog.admin.domain.exceptions.NotFoundException;
 import com.pedrolima.catalog.admin.domain.validation.Error;
 import com.pedrolima.catalog.admin.domain.validation.handler.Notification;
 import com.pedrolima.catalog.admin.infrastructure.category.models.CreateCategoryApiInput;
@@ -19,7 +20,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.Objects;
 
@@ -30,6 +30,8 @@ import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -63,7 +65,7 @@ public class CategoryApiTest {
                 .thenReturn(API.Right(CreateCategoryOutput.from(CategoryID.from("123").getValue())));
 
         // when
-        final var request = MockMvcRequestBuilders.post("/categories")
+        final var request = post("/categories")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(aInput));
 
@@ -100,7 +102,7 @@ public class CategoryApiTest {
                 .thenReturn(API.Left(Notification.create(new Error(expectedErrorMessage))));
 
         // when
-        final var request = MockMvcRequestBuilders.post("/categories")
+        final var request = post("/categories")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(aInput));
 
@@ -137,7 +139,8 @@ public class CategoryApiTest {
                 .thenThrow(DomainException.with(new Error(expectedErrorMessage)));
 
         // when
-        final var request = MockMvcRequestBuilders.post("/categories")
+        final var request = post("/categories")
+                .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(aInput));
 
@@ -176,20 +179,21 @@ public class CategoryApiTest {
         when(getCategoryByIdUseCase.execute(any())).thenReturn(CategoryOutput.from(aCategory));
 
         // when
-        final var request = MockMvcRequestBuilders.get("/categories/{id}", expectedId);
+        final var request = get("/categories/{id}", expectedId)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON);
 
         final var response = mvc.perform(request)
                 .andDo(print());
 
         // then
         response.andExpect(status().isOk())
-                        .andExpect(jsonPath("$.id", equalTo(expectedId)))
-                        .andExpect(jsonPath("$.name", equalTo(expectedName)))
-                        .andExpect(jsonPath("$.description", equalTo(expectedDescription)))
-                        .andExpect(jsonPath("$.is_active", equalTo(expectedIsActive)))
-                        .andExpect(jsonPath("$.created_at", equalTo(aCategory.getCreatedAt())))
-                        .andExpect(jsonPath("$.updated_at", equalTo(aCategory.getUpdatedAt())))
-                        .andExpect(jsonPath("$.deleted_at", equalTo(aCategory.getDeletedAt())));
+                .andExpect(jsonPath("$.id", equalTo(expectedId)))
+                .andExpect(jsonPath("$.name", equalTo(expectedName)))
+                .andExpect(jsonPath("$.description", equalTo(expectedDescription)))
+                .andExpect(jsonPath("$.is_active", equalTo(expectedIsActive)))
+                .andExpect(jsonPath("$.created_at", equalTo(aCategory.getCreatedAt().toString())))
+                .andExpect(jsonPath("$.updated_at", equalTo(aCategory.getUpdatedAt().toString())));
 
         verify(getCategoryByIdUseCase, times(1)).execute(expectedId);
     }
@@ -200,11 +204,16 @@ public class CategoryApiTest {
         final var expectedId = CategoryID.from("123");
         final var expectedErrorMessage = "Category with ID %s was not found".formatted(expectedId.getValue());
 
+        when(getCategoryByIdUseCase.execute(any()))
+                .thenThrow(NotFoundException.with(Category.class, expectedId));
+
         // when
-        final var request = MockMvcRequestBuilders.get("/categories/{id}", expectedId);
+        final var request = get("/categories/{id}", expectedId)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON);
 
         final var response = mvc.perform(request)
-                        .andDo(print());
+                .andDo(print());
 
         // then
         response.andExpect(status().isNotFound())

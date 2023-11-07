@@ -3,7 +3,7 @@ package com.pedrolima.catalog.admin.application.category.retrieve.get;
 import com.pedrolima.catalog.admin.domain.category.Category;
 import com.pedrolima.catalog.admin.domain.category.CategoryGateway;
 import com.pedrolima.catalog.admin.domain.category.CategoryID;
-import com.pedrolima.catalog.admin.domain.exceptions.DomainException;
+import com.pedrolima.catalog.admin.domain.exceptions.NotFoundException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -58,7 +58,7 @@ public class GetCategoryByIdUseCaseTest {
 
     @Test
     public void givenAnInvalidId_whenCallsGetCategory_shouldReturnNotFound() {
-        final var expectedErrorCount = 1;
+        final var expectedErrorCount = 0;
         final var expectedId = CategoryID.from("123");
         final var expectedErrorMessage = "Category with ID %s was not found".formatted(expectedId.getValue());
 
@@ -66,11 +66,11 @@ public class GetCategoryByIdUseCaseTest {
                 .thenReturn(Optional.empty());
 
         final var actualException = Assertions.assertThrows(
-                DomainException.class,
+                NotFoundException.class,
                 () -> useCase.execute(expectedId.getValue()));
 
         Assertions.assertEquals(expectedErrorCount, actualException.getErrors().size());
-        Assertions.assertEquals(expectedErrorMessage, actualException.getErrors().get(0).message());
+        Assertions.assertEquals(expectedErrorMessage, actualException.getMessage());
     }
 
     @Test
