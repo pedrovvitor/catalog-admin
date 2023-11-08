@@ -3,8 +3,7 @@ package com.pedrolima.catalog.admin.application.category.update;
 import com.pedrolima.catalog.admin.domain.category.Category;
 import com.pedrolima.catalog.admin.domain.category.CategoryGateway;
 import com.pedrolima.catalog.admin.domain.category.CategoryID;
-import com.pedrolima.catalog.admin.domain.exceptions.DomainException;
-import com.pedrolima.catalog.admin.domain.validation.Error;
+import com.pedrolima.catalog.admin.domain.exceptions.NotFoundException;
 import com.pedrolima.catalog.admin.domain.validation.handler.Notification;
 import io.vavr.control.Either;
 
@@ -45,7 +44,7 @@ public class DefaultUpdateCategoryUseCase extends UpdateCategoryUseCase {
                 .bimap(Notification::create, UpdateCategoryOutput::from);
     }
 
-    private static Supplier<DomainException> notFound(CategoryID anId) {
-        return () -> DomainException.with(new Error("Category with ID %s was not found".formatted(anId.getValue())));
+    private static Supplier<NotFoundException> notFound(CategoryID anId) {
+        return () -> NotFoundException.with(Category.class, anId);
     }
 }

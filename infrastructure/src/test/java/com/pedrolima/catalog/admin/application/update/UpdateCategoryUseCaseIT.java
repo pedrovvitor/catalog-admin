@@ -5,7 +5,7 @@ import com.pedrolima.catalog.admin.application.category.update.UpdateCategoryCom
 import com.pedrolima.catalog.admin.application.category.update.UpdateCategoryUseCase;
 import com.pedrolima.catalog.admin.domain.category.Category;
 import com.pedrolima.catalog.admin.domain.category.CategoryGateway;
-import com.pedrolima.catalog.admin.domain.exceptions.DomainException;
+import com.pedrolima.catalog.admin.domain.exceptions.NotFoundException;
 import com.pedrolima.catalog.admin.infrastructure.category.persistence.CategoryJpaEntity;
 import com.pedrolima.catalog.admin.infrastructure.category.persistence.CategoryRepository;
 import org.junit.jupiter.api.Assertions;
@@ -175,16 +175,14 @@ public class UpdateCategoryUseCaseIT {
         final var expectedId = "123";
 
         final var expectedErrorMessage = "Category with ID %s was not found".formatted(expectedId);
-        final var expectedErrorCount = 1;
 
         final var aCommand =
                 UpdateCategoryCommand.with(expectedId, expectedName, expectedDescription, expectedIsActive);
 
         final var actualException =
-                Assertions.assertThrows(DomainException.class, () -> useCase.execute(aCommand));
+                Assertions.assertThrows(NotFoundException.class, () -> useCase.execute(aCommand));
 
-        Assertions.assertEquals(expectedErrorCount, actualException.getErrors().size());
-        Assertions.assertEquals(expectedErrorMessage, actualException.getErrors().get(0).message());
+        Assertions.assertEquals(expectedErrorMessage, actualException.getMessage());
     }
 
     private void save(final Category... aCategory) {
