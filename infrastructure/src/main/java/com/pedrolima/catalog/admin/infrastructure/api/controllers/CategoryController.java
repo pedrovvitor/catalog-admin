@@ -3,6 +3,7 @@ package com.pedrolima.catalog.admin.infrastructure.api.controllers;
 import com.pedrolima.catalog.admin.application.category.create.CreateCategoryCommand;
 import com.pedrolima.catalog.admin.application.category.create.CreateCategoryOutput;
 import com.pedrolima.catalog.admin.application.category.create.CreateCategoryUseCase;
+import com.pedrolima.catalog.admin.application.category.delete.DeleteCategoryUseCase;
 import com.pedrolima.catalog.admin.application.category.retrieve.get.GetCategoryByIdUseCase;
 import com.pedrolima.catalog.admin.application.category.update.UpdateCategoryCommand;
 import com.pedrolima.catalog.admin.application.category.update.UpdateCategoryOutput;
@@ -27,11 +28,13 @@ public class CategoryController implements CategoryAPI {
     private final CreateCategoryUseCase createCategoryUseCase;
     private final GetCategoryByIdUseCase getCategoryByIdUseCase;
     private final UpdateCategoryUseCase updateCategoryUseCase;
+    private final DeleteCategoryUseCase deleteCategoryUseCase;
 
-    public CategoryController(final CreateCategoryUseCase createCategoryUseCase, final GetCategoryByIdUseCase getCategoryByIdUseCase, final UpdateCategoryUseCase updateCategoryUseCase) {
+    public CategoryController(final CreateCategoryUseCase createCategoryUseCase, final GetCategoryByIdUseCase getCategoryByIdUseCase, final UpdateCategoryUseCase updateCategoryUseCase, DeleteCategoryUseCase deleteCategoryUseCase) {
         this.createCategoryUseCase = Objects.requireNonNull(createCategoryUseCase);
         this.getCategoryByIdUseCase = Objects.requireNonNull(getCategoryByIdUseCase);
         this.updateCategoryUseCase = Objects.requireNonNull(updateCategoryUseCase);
+        this.deleteCategoryUseCase = Objects.requireNonNull(deleteCategoryUseCase);
     }
 
     public ResponseEntity<?> createCategory(final CreateCategoryApiInput input) {
@@ -83,5 +86,9 @@ public class CategoryController implements CategoryAPI {
 
         return updateCategoryUseCase.execute(aCommand)
                 .fold(onError, onSuccess);
+    }
+    @Override
+    public void deleteById(final String id) {
+        deleteCategoryUseCase.execute(id);
     }
 }
