@@ -10,7 +10,7 @@ import java.util.Collection;
 public class CleanUpExtension implements BeforeEachCallback {
 
     @Override
-    public void beforeEach(final ExtensionContext context) throws Exception {
+    public void beforeEach(final ExtensionContext context) {
         final var repositories = SpringExtension
                 .getApplicationContext(context)
                 .getBeansOfType(CrudRepository.class)
