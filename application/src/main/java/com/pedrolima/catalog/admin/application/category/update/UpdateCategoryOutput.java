@@ -5,6 +5,7 @@ import com.pedrolima.catalog.admin.domain.category.Category;
 public record UpdateCategoryOutput(
         String id
 ) {
+
     public static UpdateCategoryOutput from(final String anId) {
         return new UpdateCategoryOutput(anId);
     }

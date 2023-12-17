@@ -5,6 +5,7 @@ public record CreateCategoryCommand(
         String description,
         boolean isActive
 ) {
+
     public static CreateCategoryCommand with(
             String aName,
             String aDescription,

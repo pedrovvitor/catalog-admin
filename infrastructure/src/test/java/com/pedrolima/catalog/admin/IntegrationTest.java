@@ -18,4 +18,5 @@ import java.lang.annotation.Target;
 @SpringBootTest(classes = WebServerConfig.class)
 @ExtendWith(CleanUpExtension.class)
 public @interface IntegrationTest {
+
 }

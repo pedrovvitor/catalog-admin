@@ -22,4 +22,5 @@ import java.lang.annotation.Target;
 @DataJpaTest
 @ExtendWith(CleanUpExtension.class)
 public @interface MySQLGatewayTest {
+
 }

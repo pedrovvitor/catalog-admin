@@ -9,6 +9,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.Objects;
 
 public class Category extends AggregateRoot<CategoryID> implements Cloneable {
+
     private String name;
     private String description;
     private boolean active;

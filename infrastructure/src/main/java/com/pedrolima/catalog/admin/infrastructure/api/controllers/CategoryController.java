@@ -5,15 +5,18 @@ import com.pedrolima.catalog.admin.application.category.create.CreateCategoryOut
 import com.pedrolima.catalog.admin.application.category.create.CreateCategoryUseCase;
 import com.pedrolima.catalog.admin.application.category.delete.DeleteCategoryUseCase;
 import com.pedrolima.catalog.admin.application.category.retrieve.get.GetCategoryByIdUseCase;
+import com.pedrolima.catalog.admin.application.category.retrieve.list.ListCategoriesUseCase;
 import com.pedrolima.catalog.admin.application.category.update.UpdateCategoryCommand;
 import com.pedrolima.catalog.admin.application.category.update.UpdateCategoryOutput;
 import com.pedrolima.catalog.admin.application.category.update.UpdateCategoryUseCase;
+import com.pedrolima.catalog.admin.domain.category.CategorySearchQuery;
 import com.pedrolima.catalog.admin.domain.pagination.Pagination;
 import com.pedrolima.catalog.admin.domain.validation.handler.Notification;
 import com.pedrolima.catalog.admin.infrastructure.api.CategoryAPI;
-import com.pedrolima.catalog.admin.infrastructure.category.models.CategoryApiOutput;
-import com.pedrolima.catalog.admin.infrastructure.category.models.CreateCategoryApiInput;
-import com.pedrolima.catalog.admin.infrastructure.category.models.UpdateCategoryApiInput;
+import com.pedrolima.catalog.admin.infrastructure.category.models.CategoryListResponse;
+import com.pedrolima.catalog.admin.infrastructure.category.models.CategoryResponse;
+import com.pedrolima.catalog.admin.infrastructure.category.models.CreateCategoryRequest;
+import com.pedrolima.catalog.admin.infrastructure.category.models.UpdateCategoryRequest;
 import com.pedrolima.catalog.admin.infrastructure.category.presenters.CategoryApiPresenter;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -30,14 +33,17 @@ public class CategoryController implements CategoryAPI {
     private final UpdateCategoryUseCase updateCategoryUseCase;
     private final DeleteCategoryUseCase deleteCategoryUseCase;
 
-    public CategoryController(final CreateCategoryUseCase createCategoryUseCase, final GetCategoryByIdUseCase getCategoryByIdUseCase, final UpdateCategoryUseCase updateCategoryUseCase, DeleteCategoryUseCase deleteCategoryUseCase) {
+    private final ListCategoriesUseCase listCategoriesUseCase;
+
+    public CategoryController(final CreateCategoryUseCase createCategoryUseCase, final GetCategoryByIdUseCase getCategoryByIdUseCase, final UpdateCategoryUseCase updateCategoryUseCase, DeleteCategoryUseCase deleteCategoryUseCase, ListCategoriesUseCase listCategoriesUseCase) {
         this.createCategoryUseCase = Objects.requireNonNull(createCategoryUseCase);
         this.getCategoryByIdUseCase = Objects.requireNonNull(getCategoryByIdUseCase);
         this.updateCategoryUseCase = Objects.requireNonNull(updateCategoryUseCase);
         this.deleteCategoryUseCase = Objects.requireNonNull(deleteCategoryUseCase);
+        this.listCategoriesUseCase = Objects.requireNonNull(listCategoriesUseCase);
     }
 
-    public ResponseEntity<?> createCategory(final CreateCategoryApiInput input) {
+    public ResponseEntity<?> createCategory(final CreateCategoryRequest input) {
         final var aCommand = CreateCategoryCommand.with(
                 input.name(),
                 input.description(),
@@ -55,23 +61,24 @@ public class CategoryController implements CategoryAPI {
     }
 
     @Override
-    public Pagination<?> listCategories(
+    public Pagination<CategoryListResponse> listCategories(
             final String search,
             final int page,
             final int perPage,
             final String sort,
             final String direction
     ) {
-        return null;
+        return listCategoriesUseCase.execute(new CategorySearchQuery(page, perPage, search, sort, direction))
+                .map(CategoryApiPresenter::present);
     }
 
     @Override
-    public CategoryApiOutput getById(final String id) {
+    public CategoryResponse getById(final String id) {
         return CategoryApiPresenter.present(getCategoryByIdUseCase.execute(id));
     }
 
     @Override
-    public ResponseEntity<?> updateById(final String id, final UpdateCategoryApiInput input) {
+    public ResponseEntity<?> updateById(final String id, final UpdateCategoryRequest input) {
         final var aCommand = UpdateCategoryCommand.with(
                 id,
                 input.name(),

@@ -6,4 +6,5 @@ import com.pedrolima.catalog.admin.domain.pagination.Pagination;
 
 public abstract class ListCategoriesUseCase
         extends UseCase<CategorySearchQuery, Pagination<CategoryListOutput>> {
+
 }
